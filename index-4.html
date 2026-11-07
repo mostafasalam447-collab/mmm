@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تكنولوجيا المختبرات الطبية</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,Helvetica,sans-serif;background:#eef2f7;color:#0f172a;line-height:1.6;padding-bottom:60px}
+#err{display:none;background:#fee2e2;color:#991b1b;padding:12px 16px;font-size:14px;direction:ltr}
+.wrap{max-width:820px;margin:0 auto;padding:0 12px}
+.hero{background:linear-gradient(135deg,#0f766e,#0891b2);color:#fff;border-radius:0 0 22px 22px;padding:28px 18px 22px;text-align:center}
+.hero h1{font-size:26px;margin-bottom:4px}
+.hero p{opacity:.9;font-size:14px}
+.hero .by{margin-top:6px;font-weight:700;letter-spacing:.04em}
+.top{position:sticky;top:0;z-index:60;background:#0f172a;box-shadow:0 2px 10px rgba(0,0,0,.3)}
+.tabs{display:flex;max-width:820px;margin:0 auto;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;min-width:112px;max-width:150px;padding:10px 8px 8px;border:0;background:transparent;color:#94a3b8;font-weight:700;font-size:12.5px;cursor:pointer;border-bottom:3px solid transparent;font-family:inherit;line-height:1.35}
+.tab small{display:block;font-weight:400;font-size:10.5px;opacity:.8;direction:ltr}
+.tab.on{color:#fff;border-bottom-color:#22d3ee;background:rgba(255,255,255,.06)}
+.bar{padding:6px 12px 8px;color:#fff}
+.bar-in{max-width:820px;margin:0 auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px;font-weight:700}
+.bar .pill{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:14px}
+.pg{flex:1;min-width:60px;height:6px;background:rgba(255,255,255,.2);border-radius:6px;overflow:hidden}
+.pg i{display:block;height:100%;width:0;background:#22d3ee;transition:width .3s}
+.swipehint{text-align:center;color:#64748b;font-size:12px;margin:8px 0 2px}
+.panel{display:none}
+.panel.on{display:block;animation:fadein .25s ease}
+@keyframes fadein{from{opacity:.2;transform:translateX(14px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.panel.on{animation:none}.pg i{transition:none}}
+.ptitle{text-align:center;margin:14px 0 0;font-size:18px;color:#0f172a}
+.ptitle small{display:block;color:#64748b;font-size:13px;direction:ltr;font-weight:400}
+.sec{margin:26px 0 6px;text-align:center;font-weight:700;color:#0f766e;font-size:14px;background:#ccfbf1;border:1px solid #99f6e4;border-radius:12px;padding:8px 12px}
+.card{background:#fff;border-radius:16px;padding:18px 16px;margin:12px 0;box-shadow:0 2px 12px rgba(15,23,42,.08);border-right:6px solid #cbd5e1}
+.card.ok{border-right-color:#10b981}.card.no{border-right-color:#ef4444}
+.qh{display:flex;align-items:center;gap:8px;margin-bottom:10px;direction:ltr}
+.qn{background:#0f766e;color:#fff;min-width:32px;height:32px;border-radius:16px;padding:0 8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
+.tag{background:#ccfbf1;color:#0f766e;border-radius:12px;padding:2px 10px;font-size:12px;font-weight:700}
+.qt{font-size:16px;font-weight:700;direction:ltr;text-align:left;margin-bottom:12px;overflow-wrap:anywhere}
+.opts{display:flex;flex-direction:column;gap:8px;direction:ltr}
+.opt{display:flex;align-items:center;gap:10px;text-align:left;width:100%;padding:11px 12px;border:2px solid #e2e8f0;border-radius:12px;background:#fff;font-size:15px;cursor:pointer;color:#1e293b;font-family:inherit}
+.opt b{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:13px;background:#f1f5f9;border:2px solid #cbd5e1;font-size:12px;flex-shrink:0}
+.opt:focus-visible,.btn:focus-visible,.tab:focus-visible,.inp:focus-visible{outline:3px solid #22d3ee;outline-offset:2px}
+.opt.right{border-color:#10b981;background:#ecfdf5;color:#065f46;font-weight:700}
+.opt.right b{background:#10b981;border-color:#10b981;color:#fff}
+.opt.bad{border-color:#ef4444;background:#fef2f2;color:#7f1d1d}
+.opt.bad b{background:#ef4444;border-color:#ef4444;color:#fff}
+.opt:disabled{cursor:default}
+.inp{width:100%;padding:11px 12px;border:2px solid #e2e8f0;border-radius:12px;font-size:15px;margin-bottom:8px;direction:ltr;font-family:inherit}
+.inp.ok{border-color:#10b981;background:#ecfdf5}.inp.no{border-color:#ef4444;background:#fef2f2}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.btn{padding:10px 18px;border:0;border-radius:12px;background:#0f766e;color:#fff;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit}
+.btn.gh{background:#e2e8f0;color:#334155}
+.btn:disabled{opacity:.5;cursor:default}
+.solbox{display:none;margin-top:12px;background:#f0fdfa;border:1px solid #99f6e4;border-radius:10px;padding:10px;direction:ltr;font-size:14px;text-align:left;white-space:pre-line}
+.solbox .ans{font-weight:700;color:#0f766e}
+.solbox .ex{margin-top:6px;color:#334155}
+.result{display:none;background:#fff;border-radius:18px;padding:22px 16px;margin:20px 0;text-align:center;box-shadow:0 4px 20px rgba(15,23,42,.12)}
+.big{font-size:44px;font-weight:900;color:#0f766e}
+.stats{display:flex;gap:10px;justify-content:center;margin:14px 0}
+.stat{flex:1;border-radius:12px;padding:10px;font-weight:700}
+.stat.c{background:#ecfdf5;color:#059669}.stat.w{background:#fef2f2;color:#dc2626}.stat.p{background:#fffbeb;color:#b45309}
+.rev{text-align:right;margin-top:14px}
+.ri{background:#fef2f2;border-right:4px solid #ef4444;border-radius:10px;padding:10px;margin-bottom:8px;font-size:14px}
+.ri .q{font-weight:700;direction:ltr;text-align:left}
+.ri .a{direction:ltr;text-align:left;color:#065f46;margin-top:4px}
+.sbtn{display:block;margin:20px auto 0;padding:14px 50px;font-size:16px}
+</style>
+</head>
+<body>
+<div id="err"></div>
+<div class="hero">
+  <h1>🔬 تكنولوجيا المختبرات الطبية</h1>
+  <p>Medical Laboratory Technology — بنك أسئلة المحاضرات، كل ملف لوحده</p>
+  <p class="by">BY MOSTAFA SALLAM</p>
+</div>
+<div class="top">
+  <div class="tabs" id="tabs"></div>
+  <div class="bar"><div class="bar-in">
+    <span class="pill" id="sNum">0/0</span><span class="pill" id="sC">✅ 0</span><span class="pill" id="sW">❌ 0</span><span class="pill" id="sP">📊 0%</span>
+    <div class="pg"><i id="sFill"></i></div>
+  </div></div>
+</div>
+<div class="wrap">
+  <div class="swipehint">↔ اسحب يمين أو شمال للتنقل بين الملفات، أو اختار من فوق</div>
+  <div id="panels"></div>
+</div>
+<script>
+window.onerror=function(m,s,l){var e=document.getElementById('err');if(e){e.style.display='block';e.textContent='JS error: '+m+' (line '+l+')';}};
+var L='ABCDEFGHIJ'.split('');
+
+var TABS=[
+ {k:'lab1',label:'🧪 المبادئ العامة للمختبر (1)',sub:'Lab Principles I'},
+ {k:'lab2',label:'🩸 المبادئ العامة للمختبر (2)',sub:'Lab Principles II'},
+ {k:'ab1',label:'⚗️ مفاهيم الأحماض والقواعد',sub:'Acids & Bases'},
+ {k:'ab2',label:'📐 قوة واتزان الأحماض والقواعد',sub:'Strengths & Equilibria'},
+ {k:'par',label:'🪱 مفاهيم عامة في الطفيليات',sub:'General Parasitology'},
+ {k:'pro',label:'🦠 مقدمة في الأوليات',sub:'Intro to Protozoa'},
+ {k:'eh',label:'🧫 الأميبا الحالة للنسيج',sub:'E. histolytica'},
+ {k:'fla',label:'💧 الأميبا حرة المعيشة',sub:'Free-living Amoeba'},
+ {k:'nut',label:'🥗 التغذية',sub:'Nutrition'}
+];
+
+var Q=[];
+function M(tab,secTitle,tag,list){list.forEach(function(it){Q.push({t:tab,st:secTitle,tag:tag,type:'mcq',q:it[0],o:it[1],c:it[2],e:it[3]||''});});}
+function T(tab,secTitle,tag,list){list.forEach(function(it){Q.push({t:tab,st:secTitle,tag:tag,type:'mcq',q:it[0],o:['True','False'],c:it[1]?0:1,e:it[2]||''});});}
+function P(tab,secTitle,tag,list){list.forEach(function(it){Q.push({t:tab,st:secTitle,tag:tag,type:'num',q:it[0],v:it[1],unit:it[2],sol:it[3]});});}
+
+/* ---------- Lab Principles I ---------- */
+M('lab1','Part 1 — Multiple Choice','MCQ',[
+["Which branch of chemistry focuses on separating, identifying, and quantifying chemical components of matter?",["Organic Chemistry","Analytical Chemistry","Physical Chemistry","Biochemistry"],1,"Analytical chemistry is the branch focused on separating, identifying, and quantifying chemical components of matter."],
+["Determining the numerical amount or relative proportion of a specific analyte in a sample is known as:",["Qualitative Analysis","Quantitative Analysis","Physical Testing","Biological Screening"],1,"Quantitative analysis determines the numerical amount; qualitative analysis determines identity."],
+["Which of the following is classified under Physical Hazards in the laboratory?",["Corrosive chemicals","Electricity and Fire","Culture media","Carcinogens"],1,"Physical hazards include electricity, fire, equipment, and glassware."],
+["How should biological hazards such as urine, stool, and blood specimens be safely handled?",["Pipette them by mouth","Collect specimens in clean, dry, sterile containers and wear disposable gloves","Store them in flammable storage cabinets","Mix them directly with acid solutions"],1,"Wear gloves/masks/lab coats, disinfect surfaces, and use sterile containers."],
+["In case of an Acid Burn, what is the recommended immediate first-aid step?",["Apply ointment immediately","Neutralize directly with concentrated alkali","Rinse under running water for 10-15 minutes and leave the wound exposed","Cover tightly with a dry cloth without rinsing"],2,"Rinse under running water for 10-15 minutes without applying creams or ointments."],
+["When responding to an Alkali Burn, what should you avoid doing unless specifically directed by a medical professional?",["Rinsing with cool water","Seeking medical assistance","Attempting to neutralize the burn with another chemical","Removing contaminated outer gloves"],2,"Rinse alkali burns with cool water and avoid chemical neutralization unless directed by a doctor."],
+["If a person suffers an Electric Shock in the laboratory, what is the FIRST action you should take?",["Apply antiseptic lotion","Put off the main switch","Start chest compressions immediately without checking power","Give the person water to drink"],1,"The first step is turning off the main switch to cut off the electrical source."],
+["Which glass flask is specifically designed and used for making final exact volumes of reagents?",["Conical flask","Flat bottomed flask","Round bottomed flask","Volumetric flask"],3,"Volumetric flasks are designed for preparing standard solutions and making up precise final volumes."],
+["Which type of laboratory bottles is used specifically to store hygroscopic reagents?",["Drop bottles","Screw-capped bottles","Reagent drop flasks","Open glass beakers"],1,"Screw-capped bottles prevent contact with air moisture, so they suit hygroscopic reagents."],
+["Which laboratory glassware is primarily used for titration procedures?",["Burette","Measuring cylinder","Test tube","Round bottomed flask"],0,"Burettes (along with conical flasks) are the standard glassware for titration."]
+]);
+T('lab1','Part 2 — True / False','T/F',[
+["Qualitative analysis determines the numerical amount of a substance in a sample.",false,"Qualitative analysis determines identity; quantitative analysis determines the numerical amount."],
+["Centrifuges must be properly balanced and closed before operation.",true,"Balancing and closing the centrifuge is a critical safety rule."],
+["It is acceptable to pipette liquids by mouth as long as non-toxic liquids are used.",false,"Never pipette by mouth under any circumstances; always use mechanical pipetting devices."],
+["Flammable chemicals should be stored in approved flammable storage cabinets in a cool place.",true,"This minimizes chemical hazards."],
+["For strong acid exposure, rinsing first with water followed by a dilute 1-2% ammonia or sodium bicarbonate solution is recommended.",true,"After extensive rinsing with water, a mild 1-2% sodium bicarbonate or dilute ammonia solution can be applied."],
+["Beakers are typically used for measuring exact liquid volumes in titrations.",false,"Beakers are for holding/mixing reagents, not exact volumes (use volumetric flasks, burettes, or pipettes)."],
+["Conical flasks (Erlenmeyer flasks) are commonly used for titrations and boiling liquids.",true,"Their shape allows easy swirling during titration and safe boiling."],
+["Drop bottles are used to store large bulk volumes of liquid reagents.",false,"Drop bottles are used for dispensing solutions drop by drop."],
+["Biological hazardous waste should be allowed to accumulate in the laboratory until the end of the week before disposal.",false,"Biological waste must be disposed of properly and NOT allowed to accumulate."],
+["Round bottomed flasks are suitable for heating liquids under high heat.",true,"They distribute heat uniformly, making them ideal for high-heat applications."]
+]);
+
+/* ---------- Lab Principles II ---------- */
+M('lab2','Part 1 — Multiple Choice','MCQ',[
+["Which vein is the most common and preferred site for performing a standard venipuncture?",["Basilic vein","Cephalic vein","Median cubital vein","Metacarpal vein"],2],
+["What is the correct angle of needle penetration into the vein during venipuncture?",["10° – 15°","30° – 40°","60° – 70°","90°"],1],
+["Which blood collection tube contains EDTA and is used for Complete Blood Count (CBC)?",["Red top","Lavender top","Light Blue top","Grey top"],1],
+["A light blue top tube containing 3.2% Sodium citrate is designated for which laboratory tests?",["Glucose estimation","Coagulation studies (PT, APTT)","Erythrocyte Sedimentation Rate (ESR)","Blood cultures"],1],
+["Which additive is present in a Grey-top tube used for accurate glucose estimation?",["Heparin","Sodium citrate 3.8%","Sodium fluoride + Potassium oxalate","Gel separator only"],2],
+["How should the venipuncture site be cleaned with spirit cotton prior to needle insertion?",["From the outside moving inward in circles","In a circular motion from the center outward","Up and down vigorously","Side to side repeatedly"],1],
+["What concentration of ethanol (spirit) is used for site preparation in phlebotomy?",["50%","70%","95%","100%"],1],
+["Which type of solution is defined as containing one gram molecular weight of a substance dissolved in 1 liter of solution?",["Molal solution","Molar solution","Normal solution","Saturated solution"],1],
+["How many grams of NaOH are required to prepare 1 Liter of 1 M NaOH solution? (Na=23, O=16, H=1)",["20 grams","40 grams","58.5 grams","80 grams"],1,"MW of NaOH = 23 + 16 + 1 = 40 g/mol, so 1 M = 40 g per liter."],
+["What is a solution called when a gram equivalent weight of a substance is dissolved in 1 liter of solution?",["Percent solution","Molal solution","Normal solution (N)","Saturated solution"],2]
+]);
+T('lab2','Part 2 — True / False','T/F',[
+["Phlebotomy is defined as the technique of collecting blood samples from a peripheral vein.",true],
+["Ankle or foot veins should be routinely attempted if forearm veins are difficult to find.",false,"Avoid foot/ankle veins."],
+["A green-top tube contains Heparin and is used for troponin levels and chromosome studies.",true],
+["A black-top tube contains 3.8% Sodium citrate and is used for Erythrocyte Sedimentation Rate (ESR).",true],
+["The tourniquet should remain tightly tied around the arm while filling all collection tubes and removing the needle.",false,"Release the tourniquet before removing the needle."],
+["After transferring blood into additive-containing tubes, they should be mixed by vigorous shaking.",false,"Mix by gentle inversion 5-6 times."],
+["A molal solution is prepared by dissolving 1 gram molecular weight of a substance in 1 kg of solvent.",true],
+["For fasting blood sample collection, the patient is permitted to drink tea or coffee right before the draw.",false,"No tea/coffee for a fasting sample."],
+["A 0.9% NaCl solution (normal saline) is an example of a weight/volume (w/v) percent solution prepared by dissolving 0.9 g of NaCl in 100 ml of water.",true],
+["If a patient feels dizzy during or after blood collection, they should be asked to lie down flat.",true]
+]);
+P('lab2','Laboratory Solutions Practice Problems — اكتب الناتج كرقم','Problem',[
+["Molar — Calculate the mass of KOH required to prepare 2.5 liters of a 0.5 M solution. (K = 39, O = 16, H = 1)",70,"g","MW of KOH = 39 + 16 + 1 = 56 g/mol\nmoles = M × V = 0.5 × 2.5 = 1.25 mol\nmass = 1.25 × 56 = 70 g"],
+["Molar — 58.5 g of NaCl is dissolved in water to make 500 mL of solution. What is the Molarity? (Na = 23, Cl = 35.5)",2,"M","MW of NaCl = 58.5 g/mol → moles = 58.5 / 58.5 = 1 mol\nV = 0.5 L\nM = 1 / 0.5 = 2 M"],
+["Molar — How many grams of Glucose (C6H12O6) are present in 750 mL of a 2 M glucose solution? (C = 12, H = 1, O = 16)",270,"g","MW of glucose = 180 g/mol\nmoles = 2 × 0.75 = 1.5 mol\nmass = 1.5 × 180 = 270 g"],
+["Molal — What is the molality of a solution prepared by dissolving 80 g of NaOH in 2 kg of pure water? (Na = 23, O = 16, H = 1)",1,"molal","MW of NaOH = 40 g/mol → moles = 80 / 40 = 2 mol\nmolality = 2 mol / 2 kg = 1 molal"],
+["Molal — Calculate the amount of Urea (MW = 60 g/mol) needed to add to 500 g of water to produce a 0.4 molal solution.",12,"g","moles = molality × kg solvent = 0.4 × 0.5 = 0.2 mol\nmass = 0.2 × 60 = 12 g"],
+["Molal — 111 g of CaCl2 (MW = 111 g/mol) is dissolved in 2.5 kg of solvent. Determine the molal concentration.",0.4,"molal","moles = 111 / 111 = 1 mol\nmolality = 1 / 2.5 = 0.4 molal"],
+["Normal — Calculate the Normality (N) of a solution containing 49 g of H2SO4 (MW = 98 g/mol, n = 2) dissolved in 500 mL of solution.",2,"N","Equivalent weight = 98 / 2 = 49 g/eq\nequivalents = 49 / 49 = 1 eq\nN = 1 eq / 0.5 L = 2 N"],
+["Normal — How many grams of Na2CO3 (MW = 106 g/mol, n = 2) are required to prepare 250 mL of a 0.1 N solution?",1.325,"g","Equivalent weight = 106 / 2 = 53 g/eq\nequivalents = 0.1 × 0.25 = 0.025 eq\nmass = 0.025 × 53 = 1.325 g"],
+["Normal — A 1000 mL solution contains 3.65 g of HCl (MW = 36.5 g/mol, n = 1). Find its Normality.",0.1,"N","Equivalent weight = 36.5 g/eq\nequivalents = 3.65 / 36.5 = 0.1 eq\nN = 0.1 / 1 L = 0.1 N"]
+]);
+
+/* ---------- Acids & Bases: general concepts ---------- */
+M('ab1','Section 1 — Multiple Choice','MCQ',[
+["According to the Arrhenius concept, an acid is a substance that increases the concentration of which ion in water?",["Hydroxide ion (OH⁻)","Hydronium ion (H₃O⁺)","Ammonium ion (NH₄⁺)","Carbonate ion (CO₃²⁻)"],1,"Free H⁺ ions react with water to form hydronium ions (H₃O⁺)."],
+["Which of the following is classified as a monoprotic acid?",["Sulfuric acid (H₂SO₄)","Phosphoric acid (H₃PO₄)","Nitric acid (HNO₃)","Carbonic acid (H₂CO₃)"],2,"Nitric acid has 1 ionizable hydrogen; H₂SO₄, H₃PO₄ and H₂CO₃ are polyprotic."],
+["Why is Methane (CH₄) NOT considered an acid despite containing hydrogen atoms?",["The C–H bonds are ionic.","The C–H bonds are highly polar.","The C–H bonds are weakly polar, so hydrogen ions are not released.","Methane releases OH⁻ ions in water."],2,"Only hydrogens bonded to highly electronegative elements can be released as ions."],
+["How many ionizable hydrogen atoms does Ethanoic acid (CH₃COOH) have?",["4","3","1","0"],2,"Only the hydrogen bonded to oxygen ionizes; the 3 hydrogens on carbon do not."],
+["Which base exhibits VERY LOW solubility in water according to the lecture slides?",["Sodium hydroxide (NaOH)","Potassium hydroxide (KOH)","Calcium hydroxide (Ca(OH)₂)","Ammonia (NH₃)"],2,"Ca(OH)₂ and Mg(OH)₂ have very low solubility in water."],
+["In the Brønsted-Lowry concept, an acid is defined as a:",["Proton acceptor","Proton donor","Electron pair donor","Electron pair acceptor"],1,"Brønsted-Lowry: Acid = proton donor, Base = proton acceptor."],
+["In the reaction: NH₃ + H₂O ⇌ NH₄⁺ + OH⁻, what is the conjugate acid of NH₃?",["H₂O","OH⁻","NH₄⁺","H₃O⁺"],2,"A conjugate acid is formed when a base (NH₃) gains a proton."],
+["A substance that can act as both an acid and a base (e.g., Amino acids) is termed:",["Monoprotic","Amphoteric","Polyprotic","Caustic"],1,"Amphoteric substances can act as either an acid or a base."],
+["According to the Lewis concept, a base is an:",["Electron pair donor","Electron pair acceptor","Proton donor","Proton acceptor"],0,"Lewis: Acid = electron pair acceptor, Base = electron pair donor."],
+["In the reaction between Ammonia (NH₃) and Boron Trifluoride (BF₃), BF₃ acts as a Lewis acid because it:",["Donates a proton","Accepts a proton","Donates an electron pair","Accepts an electron pair"],3,"The boron atom in BF₃ accepts the electron pair donated by NH₃."]
+]);
+T('ab1','Section 2 — True / False','T/F',[
+["Free H⁺ ions exist abundantly as free protons in aqueous solution.",false,"Free H⁺ ions do NOT exist in water; they react to form hydronium ions (H₃O⁺)."],
+["Phosphoric acid (H₃PO₄) is classified as a polyprotic acid.",true,"It contains three ionizable hydrogens (H₃PO₄ → 3H⁺ + PO₄³⁻)."],
+["Hydrogen atoms attached to carbon in CH₃COOH can easily ionize in water.",false,"Hydrogens on carbon are in weakly polar bonds and do NOT ionize."],
+["Sodium hydroxide (NaOH) and Potassium hydroxide (KOH) have high solubility in water and are extremely caustic.",true,"NaOH and KOH are highly soluble and highly caustic to skin."],
+["Magnesium hydroxide (Mg(OH)₂) has very high solubility in water.",false,"Mg(OH)₂ has VERY LOW solubility in water."],
+["A conjugate base is the species formed when a base gains a proton.",false,"A conjugate ACID is formed when a base gains a proton; a conjugate base remains after an acid loses a proton."],
+["In the reaction HCl + H₂O ⇌ H₃O⁺ + Cl⁻, the chloride ion (Cl⁻) is the conjugate base of HCl.",true,"Cl⁻ remains after HCl donates its proton."],
+["Amino acids are amphoteric because they contain both amine (basic) and carboxylic (acidic) groups.",true,"Amine groups accept protons; carboxylic groups donate protons."],
+["The Lewis acid-base concept is restricted only to reactions that involve proton (H⁺) transfer.",false,"The Lewis concept broadened acid-base theory to reactions NOT involving H⁺ transfer."],
+["In the Lewis concept, the hydroxide ion (OH⁻) acts as a Lewis base because it has an unshared pair of electrons to donate.",true,"OH⁻ donates an unshared electron pair, so it is a Lewis base."]
+]);
+
+/* ---------- Acids & Bases: strengths & equilibria ---------- */
+M('ab2','Multiple Choice','MCQ',[
+["Which of the following correctly describes a strong acid in aqueous solution?",["It ionizes only partially (<< 100%) in water.","It ionizes completely (100%) to yield H₃O⁺ and an anion.","It holds onto hydrogen ions more strongly than weak acids.","It exists in dynamic equilibrium represented by double arrows (⇌)."],1,"A strong acid is 100% ionized in aqueous solution, giving H₃O⁺ and an anion."],
+["According to the Brønsted-Lowry concept, a stronger acid is one that:",["Holds onto hydrogen ions more strongly.","Accepts protons more readily.","Loses its hydrogen ions more easily and donates protons quicker.","Forms a strong conjugate base in solution."],2,"Stronger acids lose hydrogen ions more easily and donate protons quicker."],
+["What is the relationship between the strength of an acid and the strength of its conjugate base?",["The stronger the acid, the stronger its conjugate base.","The stronger the acid, the weaker its conjugate base.","Acid strength and conjugate base strength are completely independent.","A strong acid always forms a conjugate base with a very high Kb."],1,"The anion of a strong acid has a negligible tendency to accept a proton."],
+["Phosphoric acid (H₃PO₄) is classified as a triprotic acid. How many dissociation constants (Ka) does it have?",["1","2","3","4"],2,"Polyprotic acids lose hydrogen ions one at a time: three ionizable hydrogens = three Ka values."],
+["Which mathematical expression correctly defines pKa?",["pKa = 10^(-Ka)","pKa = -log(Ka)","pKa = log(1 / Kb)","pKa = Ka × [H₂O]"],1,"pKa is the negative base-10 logarithm of Ka."],
+["An acid with a larger Ka value (or smaller pKa value) indicates:",["A weaker acid.","A stronger acid.","A lower concentration of hydronium ions at equilibrium.","An acid that does not ionize in water."],1,"A larger Ka / smaller pKa means greater ionization, i.e. a stronger acid."],
+["Given that Nitrous acid (HNO₂) has Ka = 4.4 × 10⁻⁴ and Acetic acid (CH₃COOH) has Ka = 1.8 × 10⁻⁵, which statement is TRUE?",["Acetic acid is stronger than nitrous acid.","Nitrous acid is stronger than acetic acid.","Both acids are 100% ionized in water.","Acetic acid has a smaller pKa than nitrous acid."],1,"4.4 × 10⁻⁴ > 1.8 × 10⁻⁵, so nitrous acid has the larger Ka and is stronger."],
+["Why is the concentration of water [H₂O] omitted from the acid dissociation constant (Ka) expression?",["Water does not participate in the reaction.","Water is a solid in aqueous solutions.","The concentration of water is essentially constant in dilute solutions and is incorporated into Kc to give Ka.","Water completely evaporates during ionization."],2,"In dilute aqueous solutions [H₂O] is virtually constant: Ka = Kc[H₂O]."],
+["When ammonia (NH₃) dissolves in water at equilibrium, approximately what percentage is present as NH₄⁺?",["100%","50%","About 1%","0.01%"],2,"Ammonia is a weak base; only about 1% is present as NH₄⁺ at equilibrium."],
+["For a weak base dissociation B(aq) + H₂O(l) ⇌ BH⁺(aq) + OH⁻(aq), the correct Kb expression is:",["Kb = [B] / ([BH⁺][OH⁻])","Kb = [BH⁺][OH⁻] / [B]","Kb = [BH⁺][OH⁻] / ([B][H₂O])","Kb = [B][H₂O] / [OH⁻]"],1,"Kb = products ([BH⁺][OH⁻]) over the un-ionized base [B]; water is left out."]
+]);
+
+/* ---------- General Parasitology ---------- */
+M('par','Part 1 — Multiple Choice','MCQ',[
+["Which type of parasite capability allows it to produce disease specifically in an immunocompromised host?",["Ectoparasite","Endoparasite","Opportunistic parasite","Permanent parasite"],2,"Opportunistic parasite — e.g., Toxoplasma gondii."],
+["An organism in which a parasite reaches its sexual maturity (adult stage) is defined as the:",["Intermediate host","Definitive host","Paratenic host","Reservoir host"],1,"Definitive host — where the parasite reaches sexual maturity."],
+["Which mode of parasitic disease transmission occurs when a parasite is transferred transplacentally from mother to fetus?",["Autoinfection","Contact transmission","Congenital transmission","Iatrogenic infection"],2,"Congenital transmission — from mother to fetus across the placenta."],
+["Entamoeba histolytica causes tissue destruction through which of the following pathological mechanisms?",["Physical obstruction","Lytic necrosis","Neoplasm","Allergic reaction"],1,"Lytic necrosis — caused by the lytic enzymes of E. histolytica."],
+["A host that harbors a parasite in an arrested state of development while keeping it viable and ready to infect a subsequent host is called a:",["Dead-end host","Paratenic host","Reservoir host","Vector"],1,"Paratenic host — harbors the parasite in an arrested state of development."],
+["Which biological interaction describes an association where both organisms benefit, but neither is dependent on the other for survival?",["Commensalism","Mutualism","Symbiosis","Parasitism"],1,"Mutualism — both benefit, but neither depends on the other for survival."],
+["Infections naturally transmitted mainly in animals that may secondarily be acquired by humans are termed:",["Anthroponosis","Zooanthroponosis","Anthropozoonosis","Saprozoonosis"],2,"Anthropozoonosis — infection mainly in animals, acquired secondarily by humans."],
+["Which parasite exhibits a facultative parasitic life cycle (able to live free-living or parasitic)?",["Ascaris","Naegleria fowleri","Human louse","Toxoplasma gondii"],1,"Naegleria fowleri can live free-living or as a parasite."],
+["Infection transmitted through non-animal environmental sites such as food, soil, water, or plants is classified as:",["Direct zoonosis","Metazoonosis","Saprozoonosis","Sylvatic zoonosis"],2,"Saprozoonosis — transmitted via non-animal environmental sites."],
+["Schistosoma haematobium infection is clinically associated with which type of pathological outcome?",["Neoplasm (Malignancy)","Mechanical trauma","Lytic necrosis","Physical obstruction"],0,"Neoplasm — it is associated with bladder malignancy."]
+]);
+T('par','Part 2 — True / False','T/F',[
+["The diagnostic stage of a parasite is the stage capable of entering and infecting the human body.",false,"That defines the INFECTIVE stage. The diagnostic stage exits the host and is detected."],
+["Lice are classified as ectoparasites and permanent parasites.",true,"Lice live on the skin surface (ectoparasite) and stay permanently."],
+["Mosquitoes act as temporary parasites because they visit the host from time to time for feeding.",true,"They visit the host periodically for blood feeding."],
+["A reservoir host is an animal host that harbors the same stages of the parasite as humans and serves as a source of infection.",true],
+["In commensalism, both the parasite and the host derive mutual benefits from each other.",false,"In commensalism only one partner benefits, without causing injury."],
+["Symbiosis is an association where both host and parasite are so interdependent that neither can survive without the other, and neither suffers harm.",true,"Symbiosis is an obligate mutualistic association without harm."],
+["Physical obstruction of luminal organs can be caused by a mass of collected Ascaris worms.",true],
+["Iatrogenic parasitic transmission occurs through drinking contaminated water.",false,"Iatrogenic infection occurs via medical procedures such as blood transfusion."],
+["Sylvatic zoonosis refers to zoonotic infections where the primary source of infection comes from man's own pet animals.",false,"The source of sylvatic zoonosis is wild animals. Pets relate to domestic zoonosis."],
+["Metazoonosis requires invertebrate vectors (such as arthropods) for transmission to hosts.",true]
+]);
+
+/* ---------- Introduction to Protozoa ---------- */
+M('pro','Part I — Multiple Choice','MCQ',[
+["Which of the following structures in a protozoan cell is mainly responsible for food ingestion, excretion, and respiration?",["Endoplasm","Ectoplasm","Karyosome","Chromatoide bodies"],1,"Ectoplasm is responsible for ingestion of food, excretion, respiration, protection, and sensation."],
+["What is the typical size range of protozoa?",["1 - 150 µm","10 - 500 µm","0.1 - 10 µm","1 - 15 mm"],0,"Protozoa range from 1 to 150 µm."],
+["Which protozoan parasite lacks specialized organelles for locomotion?",["Entamoeba","Balantidium","Giardia","Plasmodium"],3,"Plasmodium has no specific organ for locomotion."],
+["The inner, granular portion of the cytoplasm responsible for nutrition and reproduction is the:",["Ectoplasm","Endoplasm","Cytostome","Cytopyge"],1,"Endoplasm is the inner granular cytoplasm responsible for nutrition and reproduction."],
+["Which of the following belongs to the Subphylum Mastigophora?",["Entamoeba histolytica","Giardia lamblia","Balantidium coli","Plasmodium falciparum"],1,"Giardia belongs to Mastigophora (flagellates). Entamoeba is Sarcodina."],
+["Multiple fission in protozoa, where the nucleus divides several times before cytoplasm division, is known as:",["Binary fission","Schizogony (Merogony)","Gametogony","Syngamy"],1,"Schizogony/merogony produces multiple merozoites within a schizont."],
+["The central DNA-containing body located within the nucleus of a protozoan cell is called the:",["Cytostome","Karyosome (Endosome)","Cytopyge","Chromatoide body"],1,"The karyosome (endosome) is a DNA-containing body located centrally within the nucleus."],
+["Undigested food particles in ciliated protozoa are extruded through a specific cell structure known as the:",["Pseudopodium","Cytostome","Cytopyge","Karyosome"],2,"Undigested waste is extruded through the cytopyge."],
+["In complex life cycles of protozoa, sexual reproduction (gametogony) typically occurs:",["In all intermediate hosts simultaneously","In one host, while asexual reproduction occurs in another host","Exclusively outside any host environment","Without any nuclear division"],1,"Complex life cycles alternate sexual reproduction in one host and asexual in another."],
+["Intestinal and luminal protozoa generally have a simple life cycle that requires:",["Two arthropod vectors","Only one host","Both a vertebrate and invertebrate host","Snails as intermediate hosts"],1,"Luminal/intestinal protozoa have simple life cycles requiring a single host."]
+]);
+T('pro','Part II — True / False','T/F',[
+["Protozoa are multicellular organisms that always live in large colonies.",false,"Protozoa are unicellular (single-celled)."],
+["The ectoplasm gives rise to locomotion structures such as pseudopodia, cilia, and flagella.",true,"Locomotion organs develop from the ectoplasm."],
+["The male cell in sexual reproduction of protozoa is termed the macrogamete.",false,"The female cell is the macrogamete; the male cell is the microgamete."],
+["Protozoa can perform excretion through contractile vacuoles, diffusion, and osmotic pressure.",true,"Excretion occurs via contractile vacuoles, diffusion, cytopyge, and osmotic pressure."],
+["Balantidium moves by means of pseudopodia.",false,"Balantidium moves by cilia. Entamoeba uses pseudopodia."],
+["Simple binary fission can occur either longitudinally or transversely to form two organisms.",true],
+["Protozoan cells are capable of secreting substances such as cyst walls, cytolysins, and digestive enzymes.",true,"They can also secrete toxins, haemolysins, and pigments."],
+["The subphylum Sarcodina includes organisms that move using flagella, such as Giardia.",false,"Sarcodina includes amoebae (e.g., E. histolytica); Mastigophora includes flagellates."],
+["Protozoa respiration can occur via direct uptake of oxygen or using oxygen liberated from metabolic processes.",true],
+["Contractile vacuoles and chromatoide bodies are typically located within the endoplasm.",true,"Endoplasm contains food vacuoles, contractile vacuoles, chromatoide bodies, and foreign bodies."]
+]);
+
+/* ---------- Entamoeba histolytica ---------- */
+M('eh','Part 1 — Multiple Choice','MCQ',[
+["Which stage of Entamoeba histolytica is the infective stage?",["Trophozoite","Precyst","Mature (quadrinucleated) cyst","Immature cyst"],2],
+["How many nuclei does the mature cyst of E. histolytica contain?",["1","2","4","8"],2],
+["What is the average size of the E. histolytica trophozoite?",["5 – 10 μ","15 μ","20 – 30 μ","50 – 60 μ"],2],
+["Which of the following is a reservoir host of E. histolytica?",["Cattle","Cats, dogs and rats","Mosquitoes","Birds"],1],
+["Which stage is detected in FORMED stool?",["Trophozoite","Cyst","Metacystic trophozoite","Precyst only"],1],
+["The nucleus of the trophozoite is characterized by:",["Multiple nuclei with no karyosome","Single, rounded, with a karyosome and peripheral chromatin granules","Two nuclei with a large central karyosome","No visible nucleus"],1],
+["Which of the following is a feature of the ACUTE stage of intestinal amoebiasis?",["Tenesmus","Hemoptysis","Tender hepatomegaly","Constipation alternating with light dysentery"],0],
+["Which of the following is a manifestation of pulmonary amoebiasis?",["Tenesmus","Hemoptysis","Tender hepatomegaly","Bloody diarrhea"],1],
+["Which of the following is an INDIRECT method of diagnosis?",["Stool examination for cysts","Sputum examination","Detection of amoebic antibodies by ELISA","Examination of aspirated liver pus"],2],
+["Raw vegetables should be treated with vinegar for how long before consumption?",["5 minutes","10 minutes","30 minutes","2 hours"],2]
+]);
+T('eh','Part 2 — True / False','T/F',[
+["The trophozoite is the active invasive form and feeds on starch and mucus in the colon lumen.",true],
+["The cyst of E. histolytica is rounded, thick-walled, with an average size of 15 μ.",true],
+["The mature cyst of E. histolytica contains 8 nuclei.",false,"The mature cyst has 4 nuclei."],
+["The trophozoite reproduces by binary fission.",true],
+["Man is the definitive host of E. histolytica.",true],
+["Cysts are detected in diarrheic (fluid) stool, while trophozoites are detected in formed stool.",false,"Trophozoites are found in fluid stool and cysts in formed stool."],
+["In asymptomatic infection, the parasite lives in the intestinal lumen as a commensal and cysts may be found in the stool.",true],
+["Fever is a common feature of acute intestinal amoebiasis.",false,"Fever is uncommon in the acute intestinal stage."],
+["Amoebic liver abscess presents with tender hepatomegaly, fever and pus.",true],
+["The infective stage of E. histolytica is the trophozoite.",false,"The infective stage is the mature cyst."]
+]);
+
+/* ---------- Free-living amoeba ---------- */
+M('fla','MCQ','MCQ',[
+["The flagellated form of Naegleria fowleri has:",["One long flagellum","2 long equal flagella","Multiple small flagella","No flagella"],1],
+["Which stage of Naegleria fowleri is found ONLY in soil?",["Amoeboid trophozoite","Flagellated form","Cyst","All of the above"],2],
+["Naegleria fowleri causes which of the following clinical conditions?",["Granulomatous Amoebic Encephalitis (GAE)","Primary Amoebic Meningoencephalitis (PAM)","Amoebic keratitis","Cutaneous leishmaniasis"],1],
+["The mode of infection for Naegleria fowleri is mainly through:",["Ingestion of contaminated food","Skin contact with soil","Nasal route during swimming or sniffing contaminated water","Insect vector bites"],2],
+["Which culture medium is used for culturing free-living amoebae like Naegleria and Acanthamoeba?",["Blood agar","MacConkey agar","Non-nutrient agar (NNA) with E. coli","Chocolate agar"],2],
+["The trophozoite stage of Acanthamoeba is characterized by having:",["2 long flagella","Multiple small spiky pseudopodia (Acanthopodia)","A single polar flagellum","A cilia-covered outer surface"],1],
+["Which of the following is considered an infective stage of Acanthamoeba?",["Trophozoite only","Cyst only","Both Trophozoite and Cyst","Flagellated form only"],2],
+["Acanthamoeba can cause infection in the eye leading to:",["Primary Amoebic Meningoencephalitis","Amoebic Keratitis","Conjunctivitis with purulent discharge","Cataracts"],1],
+["In humans, Acanthamoeba can inhabit all of the following EXCEPT:",["Central Nervous System (CNS)","Eye","Lungs and Skin","Red Blood Cells (RBCs)"],3],
+["Photophobia, stiff neck, and seizures are symptoms associated with:",["Stage I of Naegleria fowleri infection","Stage II of Naegleria fowleri infection","Mild skin irritation","Early stage of eye irritation"],1]
+]);
+T('fla','True / False','T/F',[
+["Naegleria fowleri reproduces by simple binary fission.",true],
+["The cyst stage of Naegleria fowleri can be found in the Central Nervous System (CNS) and CSF of infected humans.",false,"Cysts are found only in soil; only trophozoites/flagellated forms are in the CNS/CSF."],
+["Acanthamoeba is classified as an opportunistic parasite.",true],
+["Direct invasion through skin ulcers is one of the modes of transmission for Acanthamoeba.",true],
+["Naegleria fowleri flagellated forms have an elongated shape with broad anterior and tapering posterior ends.",false,"This describes the amoeboid form; the flagellated form is pear-shaped."],
+["Granulomatous Amoebic Encephalitis (GAE) is caused by Acanthamoeba.",true],
+["Microscopic examination of CSF obtained by lumbar puncture is used in the diagnosis of Naegleria fowleri.",true],
+["The cyst stage of Acanthamoeba has a single-layered wall.",false,"It has a double wall."],
+["Proper care of contact lenses and using proper lens fluid helps prevent Acanthamoeba infection.",true],
+["Adequate chlorination of swimming pools is a preventive measure against Naegleria fowleri.",true]
+]);
+
+/* ---------- Nutrition ---------- */
+M('nut','Part 1 — Choose the correct answer','MCQ',[
+["Macronutrients are:",["Vitamins and minerals","Protein and water","Carbohydrate, protein and fat","Lipids and protein"],2],
+["Glucose is the only food and energy source for:",["The brain and nervous system","Bones and liver","Muscle and kidney"],0],
+["Glycogen is stored in:",["The brain","Liver and muscle","Kidney and bone","Heart"],1],
+["Fat soluble vitamins are:",["Vitamin A-D-E-K","Vitamin C + vitamin B","Vitamin C + vitamin D"],0],
+["Rickets disease is a lack of:",["Vitamin D","Vitamin C","Vitamin B complex"],0],
+["Recommendation for protein in a healthy diet is:",["15 to 20% of the diet","25 - 26% of diet","30% of diet","50% of diet"],0],
+["Lipids contain:",["9 calories per gram","4 calories per gram","8 calories per gram","2 calories per gram"],0],
+["Pellagra disease is a lack of:",["Vitamin D","Vitamin C","Niacin","Folic acid"],2],
+["Nutrition is assessed by:",["Direct method only","Indirect method","Subjective Global Assessment","Direct and Indirect methods"],3],
+["BMI 33 kg/m² refers to:",["Healthy weight","Obesity","Under weight","Over weight"],1],
+["Types of carbohydrates are:",["Essential and Non-essential","Mono-saturated and poly-saturated","Simple sugars, Compound sugars and Complex carbohydrate","Caloric and non-caloric"],2],
+["GO foods:",["Called energy-giving foods","Called bodybuilding foods","Protective foods","Vitamin K + vitamin C"],0],
+["Goiter is a reliable sign of:",["Zinc deficiency","Protein deficiency","Iodine deficiency","Iron deficiency"],2],
+["Maximum waist circumference for adult male:",["> 50 : > 60 cm","> 94 : > 102 cm","> 120 : > 125 cm","80 : > 90 cm"],1],
+["Keep sodium (salt) daily intake:",["Under 2400 mg","4000 mg","Over 3000 mg","Over 4400 mg"],0],
+["Sparse and thin hair reflect:",["Protein, Zinc, Biotin deficiency","Vitamin B2 and Niacin deficiency","Vitamin D deficiency","Iodine deficiency"],0],
+["Water soluble vitamins are:",["Vitamin C + vitamin B","Vitamin C + vitamin D","Vitamins A-D-E-K","Vitamin K + vitamin C"],0],
+["CHO recommendation in diet:",["65% of diet","20% of diet","30% of diet","15% of diet"],0],
+["The classes of nutrients are:",["6 classes","8 classes","3 classes","5 classes"],0,"Carbohydrates, fats, protein, vitamins, minerals, and water."],
+["Triglycerides and cholesterol are:",["Types of fats","Types of CHO","Fibers","Amino acids"],0],
+["Fiber recommended intake is:",["14 g / 1000 Kcals daily","5 g / 500 Kcals daily","10 g / 2000 Kcals daily","20 g daily"],0],
+["\"Spoon-shaped\" nails (Koilonychia) are a clinical sign associated with which nutritional deficiency?",["Vitamin A","Vitamin C","Iron","Protein"],2],
+["What is the normal Body Mass Index (BMI) range for an adult?",["< 18.5","18.5 - 24.9","25.0 - 29.9","30.0 - 34.9"],1],
+["How many essential amino acids must the body receive through dietary intake?",["9","11","15","22"],0],
+["The food category primarily responsible for repairing body tissues is:",["Proteins","Vitamins","Fats","Glucose"],0],
+["Which is considered an incomplete protein source?",["Eggs","Legumes","Milk","Fish"],1]
+]);
+T('nut','Part 2 — True / False','T/F',[
+["Protein is the large class of nutrients, including sugars, starches, and fibers.",false,"That describes carbohydrates."],
+["Fructose is a polysaccharide.",false,"Fructose is a monosaccharide (simple sugar)."],
+["15% of the diet should be protein.",true],
+["65% of the diet should be carbohydrates.",true],
+["Excess glucose is stored in the body as glycogen.",true],
+["The body needs 30 amino acids in order to grow and develop properly.",false,"The body must receive 9 essential amino acids from the diet."],
+["Most nutritionists agree that fat intake should be 65% of our diet.",false,"65% is the carbohydrate recommendation."],
+["Micronutrients provide energy to the body.",false,"Macronutrients provide energy; vitamins and minerals do not."],
+["All animal products are complete proteins.",true],
+["Foods that contain all 9 essential amino acids are incomplete proteins.",false,"They are complete proteins."],
+["Fats contain 7 calories per gram.",false,"Fats contain 9 calories per gram."],
+["Saturated fats are solid or semisolid at room temperature.",true],
+["Water soluble vitamins like (C and B complex) are not stored.",true],
+["Weigh yourself routinely in the morning (12 hours since eating).",true],
+["Female waist circumference of 102 cm is risky.",true],
+["Small amounts of protein at each meal is better than one large serving.",true],
+["Triglycerides are the major form of lipids.",true],
+["Glycogen is stored in the brain.",false,"Glycogen is stored in the liver and muscle."],
+["Vitamins are a good source of calories.",false,"Vitamins do not provide calories."],
+["Minerals are inorganic substances that the body cannot manufacture.",true],
+["BMI 20 kg/m² refers to obesity grade 1.",false,"BMI 20 is within the healthy range (18.5 - 24.9)."],
+["Macronutrients provide energy to the body.",true],
+["Fats is the large class of nutrients, including sugars, starches, and fibers.",false,"That describes carbohydrates."]
+]);
+(function(){
+ var D=[
+ ["Osteoporosis","A condition that results from a lack of calcium in the bones"],
+ ["Thermic effect of food","The energy needed to digest and absorb food"],
+ ["Nutrition","The process of digestion and absorption of foods and the body's use of it for growth and replacement of cells"],
+ ["Saturated fat","Solid or semisolid fats at room temperature; main source is animal products"],
+ ["Diet","The food and beverages you normally eat and drink"],
+ ["Scurvy","Disease that results from lack of vitamin C"],
+ ["GROW foods","Foods rich in protein; these foods help to maintain life and promote growth"],
+ ["Amino acids","The building blocks of proteins"],
+ ["Classes of nutrients","Carbohydrates, fats, protein, vitamins, minerals, and water"],
+ ["Basal metabolism","The minimum energy needed by the body for vital functions when at rest and awake"],
+ ["Low Density Lipoproteins (LDL)","Fat in the blood stream that is on its way to cells for storage"],
+ ["Kilocalorie","A measure of the energy in food, specifically the energy-yielding nutrients"],
+ ["BMI = 22","Refers to healthy weight"]];
+ var n=D.length;
+ D.forEach(function(d,i){
+  var other=[(i+3)%n,(i+6)%n,(i+9)%n],k=0,p=i%4,o=[];
+  for(var pos=0;pos<4;pos++){o.push(pos===p?d[1]:D[other[k++]][1]);}
+  Q.push({t:'nut',st:'Part 3 — Match the term with its definition',tag:'Match',type:'mcq',q:'Choose the correct definition of: '+d[0],o:o,c:p,e:''});
+ });
+})();
+
+/* ---------- engine ---------- */
+var st={},cur=0,TQ={};
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function tabIdx(k){for(var i=0;i<TABS.length;i++)if(TABS[i].k===k)return i;return 0;}
+Q.forEach(function(q,i){q.id=i;q.ti=tabIdx(q.t);(TQ[q.ti]=TQ[q.ti]||[]).push(i);});
+
+function correctText(q){return q.type==='num'?(q.v+' '+q.unit):(L[q.c]+') '+q.o[q.c]);}
+
+function cardHtml(q,n){
+ var h='<div class="card" id="c'+q.id+'"><div class="qh"><span class="qn">'+n+'</span><span class="tag">'+esc(q.tag)+'</span></div>';
+ h+='<div class="qt">'+esc(q.q)+'</div>';
+ if(q.type==='mcq'){
+  h+='<div class="opts">';
+  q.o.forEach(function(o,i){h+='<button class="opt" type="button" id="o'+q.id+'_'+i+'" onclick="pick('+q.id+','+i+')"><b>'+L[i]+'</b><span>'+esc(o)+'</span></button>';});
+  h+='</div>';
+ }else{
+  h+='<input class="inp" id="i'+q.id+'" type="text" inputmode="decimal" placeholder="اكتب الناتج (رقم) — '+esc(q.unit)+'">';
+  h+='<div class="btns"><button class="btn" type="button" id="k'+q.id+'" onclick="checkNum('+q.id+')">تحقق ✔</button><button class="btn gh" type="button" id="s'+q.id+'" onclick="showSol('+q.id+')">اعرض الحل</button></div>';
+ }
+ h+='<div class="solbox" id="b'+q.id+'"></div></div>';
+ return h;
+}
+function panelHtml(ti){
+ var t=TABS[ti],h='<div class="ptitle">'+esc(t.label)+'<small>'+esc(t.sub)+'</small></div>',last='',n=0;
+ TQ[ti].forEach(function(id){
+  var q=Q[id];
+  if(q.st!==last){h+='<div class="sec">'+esc(q.st)+'</div>';last=q.st;}
+  n++;h+=cardHtml(q,n);
+ });
+ h+='<div class="result" id="r'+ti+'"></div>';
+ h+='<button class="btn sbtn" type="button" onclick="finish('+ti+')">إنهاء وعرض النتيجة 🏁</button>';
+ return h;
+}
+function showBox(q,ok){
+ var b=document.getElementById('b'+q.id);
+ var h='<div class="ans">'+(ok?'✅ إجابة صحيحة':'❌ الإجابة الصحيحة: ')+(ok?'':esc(correctText(q)))+'</div>';
+ if(q.type==='num'){h+='<div class="ex">'+esc(q.sol)+'</div>';}
+ else if(q.e){h+='<div class="ex">'+esc(q.e)+'</div>';}
+ if(!ok||q.type==='num'||q.e){b.innerHTML=h;b.style.display='block';}
+ var c=document.getElementById('c'+q.id);c.className='card '+(ok?'ok':'no');
+}
+function pick(id,i){
+ if(st[id])return;var q=Q[id],ok=(i===q.c);
+ st[id]={ok:ok};
+ q.o.forEach(function(_,j){var b=document.getElementById('o'+id+'_'+j);b.disabled=true;if(j===q.c)b.classList.add('right');else if(j===i)b.classList.add('bad');});
+ showBox(q,ok);upd();
+}
+function checkNum(id){
+ if(st[id])return;var q=Q[id],inp=document.getElementById('i'+id);
+ var x=parseFloat(String(inp.value).replace(',','.'));
+ if(isNaN(x)){inp.focus();return;}
+ var ok=Math.abs(x-q.v)<=Math.abs(q.v)*0.01+1e-9;
+ st[id]={ok:ok};inp.disabled=true;inp.classList.add(ok?'ok':'no');
+ document.getElementById('k'+id).disabled=true;document.getElementById('s'+id).disabled=true;
+ showBox(q,ok);
+ if(ok){var b=document.getElementById('b'+id);b.innerHTML='<div class="ans">✅ إجابة صحيحة — '+esc(correctText(q))+'</div><div class="ex">'+esc(q.sol)+'</div>';b.style.display='block';}
+ upd();
+}
+function showSol(id){
+ if(st[id])return;var q=Q[id];
+ st[id]={ok:false,skipped:true};
+ document.getElementById('i'+id).disabled=true;
+ document.getElementById('k'+id).disabled=true;document.getElementById('s'+id).disabled=true;
+ showBox(q,false);upd();
+}
+function upd(){
+ var ids=TQ[cur],tot=ids.length,c=0,w=0;
+ ids.forEach(function(id){if(st[id]){if(st[id].ok)c++;else w++;}});
+ var d=c+w;
+ document.getElementById('sNum').textContent=d+'/'+tot;
+ document.getElementById('sC').textContent='✅ '+c;
+ document.getElementById('sW').textContent='❌ '+w;
+ document.getElementById('sP').textContent='📊 '+(d?Math.round(c/d*100):0)+'%';
+ document.getElementById('sFill').style.width=(tot?d/tot*100:0)+'%';
+}
+function finish(ti){
+ var ids=TQ[ti],c=0,w=0,p=0,rev='';
+ ids.forEach(function(id){
+  var q=Q[id];
+  if(!st[id]){p++;}
+  else if(st[id].ok){c++;}
+  else{w++;rev+='<div class="ri"><div class="q">'+esc(q.q)+'</div><div class="a">✔ '+esc(correctText(q))+'</div></div>';}
+ });
+ var pct=Math.round(c/ids.length*100);
+ var msg=pct>=85?'ممتاز 🔥':pct>=65?'كويس، كمّل 👌':'محتاج مراجعة 📚';
+ var h='<h2>'+msg+'</h2><div class="big">'+pct+'%</div><div class="stats"><div class="stat c">✅ '+c+'<br>صح</div><div class="stat w">❌ '+w+'<br>غلط</div><div class="stat p">⏳ '+p+'<br>متجاوب مش</div></div>';
+ if(rev)h+='<div class="rev"><b>الأسئلة اللي غلطت فيها:</b><br><br>'+rev+'</div>';
+ h+='<button class="btn gh sbtn" type="button" onclick="resetTab('+ti+')">إعادة المحاولة 🔄</button>';
+ var r=document.getElementById('r'+ti);r.innerHTML=h;r.style.display='block';
+ r.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function resetTab(ti){
+ TQ[ti].forEach(function(id){delete st[id];});
+ document.getElementById('p'+ti).innerHTML=panelHtml(ti);
+ window.scrollTo(0,0);upd();
+}
+function show(ti){
+ cur=ti;
+ TABS.forEach(function(_,i){
+  document.getElementById('t'+i).classList.toggle('on',i===ti);
+  document.getElementById('p'+i).classList.toggle('on',i===ti);
+ });
+ var tb=document.getElementById('t'+ti);
+ if(tb.scrollIntoView)tb.scrollIntoView({inline:'center',block:'nearest'});
+ window.scrollTo(0,0);upd();
+}
+(function init(){
+ var tabs=document.getElementById('tabs'),panels=document.getElementById('panels'),th='',ph='';
+ TABS.forEach(function(t,i){
+  th+='<button class="tab" type="button" id="t'+i+'" onclick="show('+i+')">'+esc(t.label)+'<small>'+esc(t.sub)+'</small></button>';
+  ph+='<div class="panel" id="p'+i+'">'+panelHtml(i)+'</div>';
+ });
+ tabs.innerHTML=th;panels.innerHTML=ph;
+ var x0=0,y0=0;
+ document.addEventListener('touchstart',function(e){x0=e.touches[0].clientX;y0=e.touches[0].clientY;},{passive:true});
+ document.addEventListener('touchend',function(e){
+  var t=e.changedTouches[0],dx=t.clientX-x0,dy=t.clientY-y0;
+  if(Math.abs(dx)>90&&Math.abs(dy)<50){
+   if(e.target&&e.target.closest&&e.target.closest('.tabs,input'))return;
+   if(dx<0&&cur<TABS.length-1)show(cur+1);
+   else if(dx>0&&cur>0)show(cur-1);
+  }
+ },{passive:true});
+ show(0);
+})();
+</script>
+</body>
+</html>
